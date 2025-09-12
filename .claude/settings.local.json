@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker exec:*)",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker exec -it datewithai-postgres psql -U postgres -d datewithai -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = ''public'' AND (table_name LIKE ''%embedding%'' OR table_name LIKE ''%vector%'' OR table_name LIKE ''%knowledge%'');\")",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker exec datewithai-postgres psql -U postgres -d datewithai -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = ''public'' AND (table_name LIKE ''%embedding%'' OR table_name LIKE ''%vector%'' OR table_name LIKE ''%knowledge%'');\")",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker exec datewithai-postgres psql -U postgres -d datewithai -c \"\\d embeddings\")",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker exec datewithai-postgres psql -U postgres -d datewithai -c \"SELECT COUNT(*) as total_records, array_length(embedding, 1) as vector_dimension FROM embeddings GROUP BY array_length(embedding, 1);\")",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker exec datewithai-postgres psql -U postgres -d datewithai -c \"DELETE FROM embeddings;\")",
+      "Bash(python:*)",
+      "Bash(source:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(uvicorn:*)",
+      "Bash(curl:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

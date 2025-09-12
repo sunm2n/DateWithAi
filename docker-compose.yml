@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # 공유 PostgreSQL 데이터베이스
+  postgres_db:
+    image: pgvector/pgvector:pg17
+    container_name: datewithai-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: datewithai
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dateWithAi_backend/demo/database/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d datewithai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datewithai-network
+
+  # Redis (Spring 서버용)
+  redis:
+    image: redis:7.4-alpine
+    container_name: datewithai-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass ""
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datewithai-network
+
+  # Ollama (Python AI 서버용)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: datewithai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_NUM_PARALLEL=1
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_FLASH_ATTENTION=1
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4.0'
+        reservations:
+          memory: 4G
+          cpus: '2.0'
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - datewithai-network
+
+# Spring과 Python 애플리케이션은 로컬에서 직접 실행
+# Spring: IntelliJ에서 실행 (8080 포트)
+# Python: 터미널에서 uvicorn main:app --reload (8000 포트)
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  ollama_data:
+    driver: local
+
+networks:
+  datewithai-network:
+    driver: bridge
