@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content}, ~./about.html)}">
+<head>
+    <title>서비스 소개 - DateWithAI</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="hero-section bg-gradient-info text-white py-5 mb-5">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-info-circle"></i> DateWithAI 소개
+                </h1>
+                <p class="lead">
+                    AI와 함께하는 새로운 연애 시뮬레이션 경험
+                </p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heart text-danger"></i> DateWithAI란?</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">
+                            DateWithAI는 인공지능 기술을 활용한 혁신적인 연애 시뮬레이션 플랫폼입니다.
+                        </p>
+                        <p>
+                            다양한 성격과 배경을 가진 AI 캐릭터들과 자연스러운 대화를 통해 
+                            현실적인 연애 경험을 시뮬레이션할 수 있습니다. 각 캐릭터는 고유한 
+                            성격, 취미, 말투를 가지고 있어 마치 실제 사람과 대화하는 듯한 
+                            생생한 경험을 제공합니다.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3><i class="fas fa-star text-warning"></i> 주요 기능</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-robot text-primary"></i> 지능형 AI 캐릭터</h5>
+                                <p>각기 다른 성격과 배경을 가진 AI 캐릭터들과 실시간 대화</p>
+                                
+                                <h5><i class="fas fa-comments text-success"></i> 자연스러운 대화</h5>
+                                <p>고급 자연어 처리 기술로 구현된 매끄럽고 자연스러운 대화</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-save text-info"></i> 대화 기록 저장</h5>
+                                <p>모든 대화 내용이 자동으로 저장되어 언제든 다시 확인 가능</p>
+                                
+                                <h5><i class="fas fa-book text-warning"></i> 스토리 기반 응답</h5>
+                                <p>캐릭터별 배경 스토리를 바탕으로 한 개성 있는 응답</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cogs text-secondary"></i> 기술 스택</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Backend</h5>
+                                <ul>
+                                    <li>Spring Boot 3.5</li>
+                                    <li>Java 21</li>
+                                    <li>PostgreSQL</li>
+                                    <li>Redis Cache</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>AI & ML</h5>
+                                <ul>
+                                    <li>Vector Database</li>
+                                    <li>PGVector Extension</li>
+                                    <li>Embedding Models</li>
+                                    <li>Natural Language Processing</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Frontend</h5>
+                                <ul>
+                                    <li>Thymeleaf Templates</li>
+                                    <li>Bootstrap 5</li>
+                                    <li>Font Awesome Icons</li>
+                                    <li>Responsive Design</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-bar"></i> 서비스 현황</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>서비스 버전</span>
+                            <strong>v1.0.0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>개발 상태</span>
+                            <span class="badge bg-success">활성</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>지원 언어</span>
+                            <strong>한국어</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>플랫폼</span>
+                            <strong>Web</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-rocket"></i> 시작하기</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>홈페이지에서 AI 캐릭터들과 바로 대화를 시작해보세요!</p>
+                        <div class="d-grid">
+                            <a th:href="@{/}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-heart"></i> 지금 시작하기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-envelope"></i> 문의하기</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>궁금한 점이 있으시면 언제든 문의해주세요.</p>
+                        <p class="small text-muted">
+                            <i class="fas fa-code"></i> 개발자: DateWithAI Team<br>
+                            <i class="fas fa-calendar"></i> 출시일: 2025년 9월
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

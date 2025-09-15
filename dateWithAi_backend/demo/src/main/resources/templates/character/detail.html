@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content}, ~./character/detail.html)}">
+<head>
+    <title th:text="${character.name} + ' - DateWithAI'">캐릭터 상세 - DateWithAI</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img th:src="${character.profileImageUrl != null ? character.profileImageUrl : '/images/default-avatar.png'}" 
+                         class="card-img-top" style="height: 400px; object-fit: cover;" 
+                         th:alt="${character.name}">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" th:text="${character.name}">캐릭터 이름</h3>
+                        <p class="text-muted" th:text="${character.age + '세 ' + (character.occupation != null ? character.occupation : '')}">나이, 직업</p>
+                        
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/chat/{id}(id=${character.id})}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-comment-dots"></i> 대화 시작
+                            </a>
+                            <a th:href="@{/stories(characterId=${character.id})}" class="btn btn-outline-secondary">
+                                <i class="fas fa-book"></i> 스토리 보기
+                            </a>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/characters}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> 목록으로
+                            </a>
+                            <form th:action="@{/characters/{id}/delete(id=${character.id})}" method="post" 
+                                  style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash"></i> 삭제
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> 캐릭터 소개
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${character.description}">캐릭터 설명</p>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-heart"></i> 성격
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${character.personality}">성격 설명</p>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-comment"></i> 말투
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${character.speakingStyle}">말투 설명</p>
+                    </div>
+                </div>
+                
+                <div th:if="${character.background != null and !character.background.isEmpty()}" class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-book-open"></i> 배경 스토리
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${character.background}">배경 설명</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar"></i> 캐릭터 정보
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <strong>생성일:</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <span th:text="${#temporals.format(character.createdAt, 'yyyy-MM-dd HH:mm')}">생성일</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <strong>최종 수정:</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <span th:text="${#temporals.format(character.updatedAt, 'yyyy-MM-dd HH:mm')}">수정일</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <strong>대화 기록:</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <span>곧 업데이트 예정</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

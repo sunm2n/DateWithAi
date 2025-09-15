@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: datewithai-backend
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/datewithai
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+  
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+  
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+    mapper:
+      default-view-inclusion: true
+    modules:
+      - com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+
+server:
+  port: 8080
+  servlet:
+    async:
+      request-timeout: 120000
+
+# AI API 설정 (환경에 따라 변경 가능)
+ai:
+  python-service:
+    base-url: http://localhost:8000
+    endpoints:
+      chat: /chat
+      upload-knowledge: /upload-knowledge
+      knowledge-sources: /knowledge/sources
+      embed-story: /upload-knowledge
+      search-vectors: /knowledge/sources
+
+# 로깅 설정
+logging:
+  level:
+    com.datewithai: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content}, ~{})}">
+<head>
+    <title>AI 연애 시뮬레이션 - DateWithAI</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="hero-section bg-gradient-primary text-white py-4 mb-5">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-heart text-danger"></i> AI와 함께하는 연애 시뮬레이션
+                </h1>
+                <p class="lead mb-0">
+                    마음에 드는 AI 캐릭터를 선택해서 특별한 대화를 시작해보세요.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="mb-4">
+                    <i class="fas fa-users text-primary"></i> 대화할 수 있는 캐릭터들
+                </h2>
+                
+                <div class="row" th:if="${characters != null and !characters.empty}">
+                    <div class="col-md-6 mb-4" th:each="character : ${characters}">
+                        <div class="card h-100 shadow-sm">
+                            <img th:src="${character.profileImageUrl != null ? character.profileImageUrl : '/images/default-avatar.png'}" 
+                                 class="card-img-top" style="height: 200px; object-fit: cover;" 
+                                 th:alt="${character.name}">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${character.name}">캐릭터 이름</h5>
+                                <p class="card-text text-muted" th:text="${character.age + '세 ' + (character.occupation != null ? character.occupation : '')}">나이, 직업</p>
+                                <p class="card-text" th:text="${#strings.abbreviate(character.description, 100)}">캐릭터 설명</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid">
+                                    <a th:href="@{/chat/{id}(id=${character.id})}" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-heart"></i> 대화 시작하기
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${characters == null or characters.empty}" class="text-center py-5">
+                    <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">아직 등록된 캐릭터가 없습니다.</h4>
+                    <p class="text-muted">새로운 캐릭터를 추가해보세요!</p>
+                    <a th:href="@{/characters/new}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> 캐릭터 추가
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> 서비스 소개
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>AI 연애 시뮬레이션이란?</h6>
+                        <p class="small text-muted">
+                            다양한 성격과 배경을 가진 AI 캐릭터들과 실시간으로 대화할 수 있는 서비스입니다.
+                        </p>
+                        
+                        <h6 class="mt-3">주요 기능</h6>
+                        <ul class="small text-muted">
+                            <li>실시간 AI 채팅</li>
+                            <li>개성 있는 캐릭터들</li>
+                            <li>대화 기록 저장</li>
+                            <li>스토리 기반 응답</li>
+                        </ul>
+                        
+                        <a th:href="@{/about}" class="btn btn-outline-primary btn-sm">
+                            더 자세히 알아보기
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line"></i> 통계
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <span>등록된 캐릭터</span>
+                            <strong th:text="${characters != null ? characters.size() : 0}">0</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>오늘의 대화</span>
+                            <strong>--</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

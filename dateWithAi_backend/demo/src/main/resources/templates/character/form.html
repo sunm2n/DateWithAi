@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content}, ~./character/form.html)}">
+<head>
+    <title>캐릭터 추가 - DateWithAI</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-plus"></i> 새 캐릭터 추가
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/characters}" method="post" th:object="${character}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">이름 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="age" class="form-label">나이 <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="age" th:field="*{age}" min="18" max="100" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="occupation" class="form-label">직업</label>
+                                        <input type="text" class="form-control" id="occupation" th:field="*{occupation}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">캐릭터 설명 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" rows="3" th:field="*{description}" required 
+                                         placeholder="캐릭터의 외모, 전반적인 특징을 설명해주세요."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="personality" class="form-label">성격 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="personality" rows="3" th:field="*{personality}" required 
+                                         placeholder="캐릭터의 성격, 행동 특성을 자세히 설명해주세요."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="speakingStyle" class="form-label">말투 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="speakingStyle" rows="3" th:field="*{speakingStyle}" required 
+                                         placeholder="캐릭터의 말하는 방식, 어조, 특징적인 표현 등을 설명해주세요."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="background" class="form-label">배경 스토리</label>
+                                <textarea class="form-control" id="background" rows="4" th:field="*{background}" 
+                                         placeholder="캐릭터의 과거, 배경 이야기를 자유롭게 작성해주세요."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="profileImageUrl" class="form-label">프로필 이미지 URL</label>
+                                <input type="url" class="form-control" id="profileImageUrl" th:field="*{profileImageUrl}" 
+                                       placeholder="https://example.com/image.jpg">
+                                <div class="form-text">이미지 URL을 입력하면 캐릭터 프로필에 표시됩니다.</div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>팁:</strong> 성격과 말투를 구체적으로 작성할수록 더 개성 있는 AI 캐릭터가 됩니다!
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/characters}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> 취소
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> 캐릭터 생성
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>
