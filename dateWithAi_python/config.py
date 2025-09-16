@@ -23,7 +23,7 @@ class Config:
     # AI 모델 설정
     EMBEDDING_MODEL = OLLAMA_EMBEDDING_MODEL
     CHAT_MODEL = OLLAMA_CHAT_MODEL
-    MAX_TOKENS = 1000
-    TEMPERATURE = 0.7
-    SIMILARITY_THRESHOLD = 0.7
-    MAX_SEARCH_RESULTS = 5
+    MAX_TOKENS = 200  # 더 짧은 응답으로 속도 향상
+    TEMPERATURE = 0.5  # 낮은 temperature로 더 일관된 빠른 응답
+    SIMILARITY_THRESHOLD = 0.5  # 더 많은 관련 컨텍스트를 가져오도록 임계값 낮춤
+    MAX_SEARCH_RESULTS = 2  # 검색 결과를 더 줄여서 속도 향상

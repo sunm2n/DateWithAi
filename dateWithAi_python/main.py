@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import uvicorn
+import json
 
 from embedding_service import EmbeddingService
 from vector_db import VectorDatabase
@@ -112,6 +114,66 @@ async def get_knowledge_sources():
         return {"sources": sources}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"소스 목록 조회 오류: {str(e)}")
+
+@app.post("/chat/stream")
+async def chat_with_ai_stream(request: ChatRequest):
+    """스트리밍 방식으로 AI 응답을 생성합니다."""
+    try:
+        query_embedding = embedding_service.create_embedding(request.message)
+        if not query_embedding:
+            raise HTTPException(status_code=500, detail="임베딩 생성 실패")
+        
+        context_chunks = vector_db.similarity_search(
+            query_embedding=query_embedding,
+            limit=Config.MAX_SEARCH_RESULTS,
+            threshold=Config.SIMILARITY_THRESHOLD
+        )
+        
+        if request.emotion:
+            response_generator = ai_generator.generate_emotion_response_stream(
+                emotion=request.emotion,
+                context=request.message,
+                intensity=request.emotion_intensity
+            )
+        else:
+            response_generator = ai_generator.generate_game_response_stream(
+                user_message=request.message,
+                context_chunks=context_chunks,
+                character_info=request.character_info
+            )
+        
+        async def stream_response():
+            full_response = ""
+            for chunk in response_generator:
+                if chunk:
+                    full_response += chunk
+                    # SSE 형식으로 데이터 전송
+                    yield f"data: {json.dumps({'chunk': chunk, 'full_response': full_response})}\n\n"
+            
+            # 스트리밍 완료 신호
+            similarity_scores = [chunk.get('similarity', 0) for chunk in context_chunks]
+            final_data = {
+                'chunk': '',
+                'full_response': full_response,
+                'context_used': context_chunks,
+                'similarity_scores': similarity_scores,
+                'finished': True
+            }
+            yield f"data: {json.dumps(final_data)}\n\n"
+        
+        return StreamingResponse(
+            stream_response(),
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"스트리밍 채팅 처리 오류: {str(e)}")
 
 @app.get("/health")
 async def health_check():

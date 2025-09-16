@@ -52,18 +52,20 @@ services:
       - ollama_data:/root/.ollama
     environment:
       - OLLAMA_ORIGINS=*
-      - OLLAMA_NUM_PARALLEL=1
-      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_NUM_PARALLEL=1      # 병렬 처리를 1로 되돌림 (안정성 우선)
+      - OLLAMA_MAX_LOADED_MODELS=2 # 1 → 2로 증가 (더 많은 모델 메모리 로드)
       - OLLAMA_FLASH_ATTENTION=1
+      - OLLAMA_MAX_QUEUE=512       # 큐 크기 증가
+      - OLLAMA_KEEP_ALIVE=5m       # 모델을 메모리에 더 오래 유지
     restart: unless-stopped
     deploy:
       resources:
         limits:
-          memory: 8G
-          cpus: '4.0'
+          memory: 12G  # 8G → 12G로 증가
+          cpus: '6.0'  # 4.0 → 6.0으로 증가
         reservations:
-          memory: 4G
-          cpus: '2.0'
+          memory: 6G   # 4G → 6G로 증가
+          cpus: '3.0'  # 2.0 → 3.0으로 증가
     healthcheck:
       test: ["CMD-SHELL", "ollama list || exit 1"]
       interval: 30s

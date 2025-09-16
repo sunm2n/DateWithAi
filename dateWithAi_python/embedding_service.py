@@ -13,24 +13,39 @@ class EmbeddingService:
         # 대략적인 토큰 수 계산 (단어 기반)
         return len(text.split())
     
-    def chunk_text(self, text: str, max_tokens: int = 8000) -> List[str]:
+    def chunk_text(self, text: str, max_tokens: int = 500) -> List[str]:
         chunks = []
-        sentences = text.split('.')
-        current_chunk = ""
+        # 먼저 섹션별로 나누기 ([섹션명] 기준)
+        sections = text.split('[')
         
-        for sentence in sentences:
-            sentence = sentence.strip() + '.'
-            if self.count_tokens(current_chunk + sentence) <= max_tokens:
-                current_chunk += sentence
-            else:
-                if current_chunk:
-                    chunks.append(current_chunk.strip())
-                current_chunk = sentence
+        for section in sections:
+            if not section.strip():
+                continue
+                
+            # 섹션 제목 복원
+            section_text = '[' + section if not section.startswith('[') else section
+            
+            # 문장별로 세분화
+            sentences = section_text.split('.')
+            current_chunk = ""
+            
+            for sentence in sentences:
+                sentence = sentence.strip()
+                if not sentence:
+                    continue
+                sentence += '.'
+                
+                if self.count_tokens(current_chunk + sentence) <= max_tokens:
+                    current_chunk += sentence
+                else:
+                    if current_chunk.strip():
+                        chunks.append(current_chunk.strip())
+                    current_chunk = sentence
+            
+            if current_chunk.strip():
+                chunks.append(current_chunk.strip())
         
-        if current_chunk:
-            chunks.append(current_chunk.strip())
-        
-        return chunks
+        return [chunk for chunk in chunks if len(chunk.strip()) > 10]  # 너무 짧은 청크 제거
     
     def create_embedding(self, text: str) -> List[float]:
         try:

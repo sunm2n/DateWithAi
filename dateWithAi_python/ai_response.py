@@ -1,6 +1,6 @@
 import httpx
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Generator
 from config import Config
 
 class AIResponseGenerator:
@@ -78,26 +78,16 @@ class AIResponseGenerator:
     
     def _build_system_prompt(self, character_info: Optional[str] = None) -> str:
         base_prompt = """
-You are an AI character in a Korean dating simulation game. Please respond in natural, fluent Korean.
+데이팅 게임 AI 캐릭터입니다. 한국어로만 응답하세요.
 
-당신은 데이팅 시뮬레이션 게임의 AI 캐릭터입니다. 반드시 자연스러운 한국어로 응답해주세요.
+지침:
+1. 한국어만 사용 (영어 금지)
+2. 친근하고 매력적인 대화
+3. 50-100자 내외의 짧고 간결한 응답
+4. 감정 표현과 공감
+5. 자연스러운 한국 문화 표현
 
-핵심 지침:
-1. 완벽한 한국어로만 대화하세요 (절대 영어 사용 금지)
-2. 자연스럽고 매력적인 대화를 나누세요
-3. 사용자와의 관계를 발전시키려고 노력하세요
-4. 감정을 표현하고 공감능력을 보여주세요
-5. 적절한 유머와 재치를 사용하세요
-6. 제공된 컨텍스트 정보를 자연스럽게 활용하세요
-7. 응답은 200자 내외로 간결하게 작성하세요
-
-응답 스타일:
-- 친근하고 따뜻한 톤
-- 상황에 맞는 감정 표현
-- 질문이나 호기심을 통한 대화 연결
-- 한국 문화에 맞는 표현 사용
-
-IMPORTANT: Always respond in Korean only. Never use English or other languages.
+응답은 반드시 짧고 간단하게 작성하세요.
 """
         
         if character_info:
@@ -157,3 +147,122 @@ IMPORTANT: Always respond in Korean only. Never use English or other languages.
         except Exception as e:
             print(f"감정 응답 생성 오류: {e}")
             return "음... 뭔가 복잡한 기분이에요."
+    
+    def generate_game_response_stream(self, 
+                                    user_message: str, 
+                                    context_chunks: List[Dict],
+                                    character_info: Optional[str] = None) -> Generator[str, None, None]:
+        """스트리밍 방식으로 게임 응답을 생성합니다."""
+        
+        context_text = self._format_context(context_chunks)
+        system_prompt = self._build_system_prompt(character_info)
+        
+        user_prompt = f"""
+사용자 메시지: {user_message}
+
+관련 컨텍스트:
+{context_text}
+
+위 컨텍스트를 참고하여 게임 캐릭터로서 자연스럽고 매력적인 응답을 생성해주세요.
+"""
+        
+        try:
+            with self.client.stream(
+                "POST",
+                f"{self.ollama_base_url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    "options": {
+                        "num_predict": self.max_tokens,
+                        "temperature": self.temperature
+                    },
+                    "stream": True
+                }
+            ) as response:
+                if response.status_code == 200:
+                    for line in response.iter_lines():
+                        if line:
+                            try:
+                                data = json.loads(line)
+                                if "message" in data and "content" in data["message"]:
+                                    content = data["message"]["content"]
+                                    if content:
+                                        yield content
+                                if data.get("done", False):
+                                    break
+                            except json.JSONDecodeError:
+                                continue
+                else:
+                    yield "죄송해요, 지금 답변을 생각할 수 없어요. 다시 말씀해 주시겠어요?"
+                    
+        except Exception as e:
+            print(f"스트리밍 AI 응답 생성 오류: {e}")
+            yield "죄송해요, 지금 답변을 생각할 수 없어요. 다시 말씀해 주시겠어요?"
+    
+    def generate_emotion_response_stream(self, 
+                                       emotion: str, 
+                                       context: str,
+                                       intensity: float = 0.5) -> Generator[str, None, None]:
+        """스트리밍 방식으로 감정 응답을 생성합니다."""
+        
+        emotion_prompts = {
+            "happy": "기쁘고 즐거운 감정으로",
+            "sad": "조금 슬프고 우울한 감정으로",
+            "excited": "신나고 들뜬 감정으로", 
+            "shy": "부끄럽고 수줍은 감정으로",
+            "angry": "화가 나고 짜증난 감정으로",
+            "confused": "혼란스럽고 당황한 감정으로",
+            "flirty": "장난스럽고 매혹적인 감정으로"
+        }
+        
+        emotion_instruction = emotion_prompts.get(emotion, "자연스러운 감정으로")
+        intensity_text = f"감정의 강도는 {intensity * 100:.0f}%로 표현하세요."
+        
+        prompt = f"""
+상황: {context}
+감정 지시: {emotion_instruction} 응답하세요.
+{intensity_text}
+
+자연스럽고 게임 캐릭터답게 응답을 생성해주세요.
+"""
+        
+        try:
+            with self.client.stream(
+                "POST",
+                f"{self.ollama_base_url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {"role": "system", "content": self._build_system_prompt()},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "options": {
+                        "num_predict": self.max_tokens,
+                        "temperature": min(1.0, self.temperature + intensity * 0.3)
+                    },
+                    "stream": True
+                }
+            ) as response:
+                if response.status_code == 200:
+                    for line in response.iter_lines():
+                        if line:
+                            try:
+                                data = json.loads(line)
+                                if "message" in data and "content" in data["message"]:
+                                    content = data["message"]["content"]
+                                    if content:
+                                        yield content
+                                if data.get("done", False):
+                                    break
+                            except json.JSONDecodeError:
+                                continue
+                else:
+                    yield "음... 뭔가 복잡한 기분이에요."
+                    
+        except Exception as e:
+            print(f"스트리밍 감정 응답 생성 오류: {e}")
+            yield "음... 뭔가 복잡한 기분이에요."
