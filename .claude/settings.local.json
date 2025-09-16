@@ -12,7 +12,15 @@
       "Bash(lsof:*)",
       "Bash(kill:*)",
       "Bash(uvicorn:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(cat:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)",
+      "Read(//Users/sunmin/**)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
