@@ -26,7 +26,7 @@
                     <div class="col-md-6 mb-4" th:each="character : ${characters}">
                         <div class="card h-100 shadow-sm">
                             <img th:src="${character.profileImageUrl != null ? character.profileImageUrl : '/images/default-avatar.png'}" 
-                                 class="card-img-top" style="height: 200px; object-fit: cover;" 
+                                 class="card-img-top" style="height: 200px; object-fit: cover; object-position: center top;" 
                                  th:alt="${character.name}">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${character.name}">캐릭터 이름</h5>

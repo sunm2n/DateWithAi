@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5f19e7bb-47c3-4e97-8423-8c739609db79" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.claude/settings.local.json" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/settings.local.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5f19e7bb-47c3-4e97-8423-8c739609db79" name="변경" comment="ai 모델 수정">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,11 +74,34 @@
       <workItem from="1757665258438" duration="400000" />
       <workItem from="1757928394538" duration="622000" />
       <workItem from="1757981170857" duration="18000" />
+      <workItem from="1757985640698" duration="1456000" />
     </task>
+    <task id="LOCAL-00001" summary="포트 변경&#10;&#10;- postgres 포트변경">
+      <option name="closed" value="true" />
+      <created>1757985659734</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1757985659734</updated>
+    </task>
+    <task id="LOCAL-00002" summary="ai 모델 수정">
+      <option name="closed" value="true" />
+      <created>1757985808694</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1757985808694</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="포트 변경&#10;&#10;- postgres 포트변경" />
+    <MESSAGE value="ai 모델 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="ai 모델 수정" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

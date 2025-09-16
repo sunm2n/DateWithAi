@@ -27,7 +27,7 @@ public class WebClientConfig {
                 .build();
         
         HttpClient httpClient = HttpClient.create(connectionProvider)
-                .responseTimeout(Duration.ofSeconds(60));
+                .responseTimeout(Duration.ofSeconds(300));
         
         return WebClient.builder()
                 .baseUrl(pythonServiceBaseUrl)
