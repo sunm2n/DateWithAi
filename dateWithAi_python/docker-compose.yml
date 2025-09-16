@@ -41,7 +41,7 @@ services:
       - ollama
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
-      - DATABASE_URL=postgresql://postgres:password@postgres_db:5432/datewithai
+      - DATABASE_URL=postgresql://postgres:password@localhost:5433/datewithai
       - PYTHONPATH=/app
     volumes:
       - .:/app
