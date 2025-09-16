@@ -2,6 +2,9 @@
 
 AI 캐릭터와 채팅할 수 있는 데이팅 시뮬레이션 게임입니다. Spring Boot 백엔드와 Python AI 서버를 연동하여 구현되었습니다.
 
+<img width="1272" height="758" alt="image" src="https://github.com/user-attachments/assets/05a03c59-1ac4-4346-8c32-3628a00c1d65" />
+
+
 ## 🏗️ 아키텍처
 
 ```
